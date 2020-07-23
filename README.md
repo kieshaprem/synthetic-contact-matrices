@@ -6,6 +6,7 @@
   *Correspondence to: mark.jit@lshtm.ac.uk* 
   
   *<sup>1</sup> Centre for Mathematical Modelling of Infectious Diseases, London School of Hygiene & Tropical Medicine* 
+  
   *<sup>2</sup> Saw Swee Hock School of Public Health, National University of Singapore and National University Health System, Singapore* 
 
 
