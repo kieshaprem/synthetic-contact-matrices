@@ -113,11 +113,11 @@ if(ALL)
 
 rm(contact_all,contact_home,contact_work,contact_school,contact_others)
 
-load('output/syntheticcontactmatrices2020/contact_all.rdata')
-load('output/syntheticcontactmatrices2020/contact_home.rdata')
-load('output/syntheticcontactmatrices2020/contact_work.rdata')
-load('output/syntheticcontactmatrices2020/contact_school.rdata')
-load('output/syntheticcontactmatrices2020/contact_others.rdata')
+load('output/syntheticcontactmatrices2020/overall/contact_all.rdata')
+load('output/syntheticcontactmatrices2020/overall/contact_home.rdata')
+load('output/syntheticcontactmatrices2020/overall/contact_work.rdata')
+load('output/syntheticcontactmatrices2020/overall/contact_school.rdata')
+load('output/syntheticcontactmatrices2020/overall/contact_others.rdata')
 
 contacts2020 = list()
 for(co in 1:length(contact_all))
