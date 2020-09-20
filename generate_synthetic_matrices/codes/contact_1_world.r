@@ -104,3 +104,15 @@ if(ALL)
   save(contact_all,file = 'output/syntheticcontactmatrices2020/overall/contact_all.rdata')
 }
 
+
+
+save(contact_all,file = 'output/syntheticcontactmatrices2020/contact_all.rdata')
+save(contact_home,file = 'output/syntheticcontactmatrices2020/contact_home.rdata')
+save(contact_work,file = 'output/syntheticcontactmatrices2020/contact_work.rdata')
+save(contact_school,file = 'output/syntheticcontactmatrices2020/contact_school.rdata')
+save(contact_others,file = 'output/syntheticcontactmatrices2020/contact_others.rdata')
+
+
+
+
+
