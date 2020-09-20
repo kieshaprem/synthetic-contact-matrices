@@ -82,7 +82,7 @@ getWorkPop = function(COUNTRY){
 
 getSchoolPop = function(COUNTRY){
   schoolpop = as.numeric(school[school$iso %in% COUNTRY,grep(pattern = 'age',x = colnames(school))])
-  sa = (schoolpop)#%*%t(schoolpop)+0.01
+  sa = (schoolpop)%*%t(schoolpop)+0.01
   sa = sa
   return(sa)
 }
