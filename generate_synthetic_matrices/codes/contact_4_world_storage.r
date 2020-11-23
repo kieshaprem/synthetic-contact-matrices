@@ -1,7 +1,7 @@
 # 6 columns: ISO3C, overall/urban/rural, location of the contact, age group of contactor, age group of contactee, mean number of contact
 library(data.table)
 
-source('compare_contact_surveys/codes/1_loadSyntheticContacts.r')
+source('../compare_contact_matrices/codes/1_loadSyntheticContacts.r')
 overall = urban = rural = list()
 
 for(i in 1:length(contacts2020))
