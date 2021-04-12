@@ -1,7 +1,7 @@
 # 6 columns: ISO3C, overall/urban/rural, location of the contact, age group of contactor, age group of contactee, mean number of contact
 library(data.table)
 
-source('../compare_contact_matrices/codes/1_loadSyntheticContacts.r')
+load('../compare_contact_matrices/input/synthetic_contacts.rdata')
 overall = urban = rural = list()
 
 for(i in 1:length(contacts2020))
@@ -67,26 +67,6 @@ syntheticcontacts_rural = rbindlist(rural)
 synthetic_contacts_2020 = rbind(syntheticcontacts_overall,syntheticcontacts_urban,syntheticcontacts_rural)
 write.csv(synthetic_contacts_2020,file = 'output/syntheticcontactmatrices2020/synthetic_contacts_2020.csv',row.names = FALSE)
 
-load('input/pop/poptotal.rdata')
-synthetic_contacts_2020_regions = data.frame(Regions = as.character(poptotal$countryname[poptotal$iso3c %in% names(contacts2020)]),
-                                             ISO = as.character(poptotal$iso3c[poptotal$iso3c %in% names(contacts2020)]),
-                                             New = 1)
-
-synthetic_contacts_2020_regions$Regions[!(as.character(synthetic_contacts_2020_regions$ISO) %in% names(contacts))]
-as.character(poptotal$countryname[poptotal$iso3c %in% names(contacts)])[(!(names(contacts) %in% as.character(synthetic_contacts_2020_regions$ISO)))]
-
-synthetic_contacts_2020_regions$ISO[!(as.character(synthetic_contacts_2020_regions$ISO) %in% names(contacts))]
-names(contacts)[(!(names(contacts) %in% as.character(synthetic_contacts_2020_regions$ISO)))]
-
-names(contacts)[(!(names(contacts) %in% names(contacts2020)))]
-synthetic_contacts_2020_regions$New[which((as.character(poptotal$countryname[poptotal$iso3c %in% names(contacts2020)]) %in% as.character(poptotal$countryname[poptotal$iso3c %in% names(contacts)])))] = 0
-table(synthetic_contacts_2020_regions$New)
-
-synthetic_contacts_2020_regions$New[synthetic_contacts_2020_regions$ISO %in% names(contacts)]
-
-which(!(as.character(poptotal$countryname[poptotal$iso3c %in% names(contacts2020)]) %in% as.character(poptotal$countryname[poptotal$iso3c %in% names(contacts)])))
-
-write.csv(synthetic_contacts_2020_regions,file = 'supplementarymaterials/synthetic_contacts_2020_regions.csv',row.names = FALSE)
 
 
 

@@ -1,7 +1,7 @@
 # load modelling output for the physical distancing interventions for COVID-19 pandemic using both the empirical and synthetic contact matrices 
 # (codes are hosted in a different repository)
 
-load('output/data_byage.rdata')
+load('output/data_byage_new.rdata')
 
 library(ggsci)
 COLS = pal_npg(c("nrc"))(10)
