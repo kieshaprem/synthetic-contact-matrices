@@ -118,7 +118,7 @@ plot_poppyramid = function(COUNTRY,INDEX,DATA){
     fe = as.integer(pyramid[3,(i+3)])/countrytotal*100
     grid.polygon(x=c(0,-ma,-ma,0),y=c(i-1,i-1,i,i), default.units = 'native',gp=gpar(col='white',fill='cornflowerblue'))
     grid.polygon(x=c(0,fe,fe,0),y=c(i-1,i-1,i,i), default.units = 'native',gp=gpar(col='white',fill='tomato2'))
-    }
+  }
   # Axes
   agenames = seq(0,100,10)
   temp = rbind(seq(-15,15,1),c(seq(15,0,-1),seq(1,15,1)))
@@ -536,7 +536,7 @@ getPlotAttacksize = function(COUNTRYNAME,Nage,ATTACKSIZEage,ATTACKSIZEage_nosch,
     
     grid.polygon(x=unit(c(0.85,0.9,0.9,0.85)-0.46,units = 'npc'),y=unit(c(0.82,0.82,0.85,0.85)+0.12,units = 'npc')
                  ,gp = gpar(fill='grey40',col='grey40'))
-
+    
     grid.text(paste0('Total Population'),unit(0.47,'npc'),unit(0.835+0.12,'npc'),just = c('left'),gp=gpar(fontsize=7))
   }
   if(STRIP == TRUE) grid.text(paste0('Population size = ',signif(results$npop,2)/10E5,' mil'),unit(0.01,'npc'),unit(0.98,'npc'),just = c('left'),gp=gpar(fontsize=8))
@@ -676,7 +676,7 @@ getPlot_hhsize = function(nrow,ncol,cols,SIZE,a,INDEX){
 
 
 
-getCorrelationPlot = function(MAX,INDEX,EMPIRICAL,MODELLED,XAXISNAME = 'Empirical POLYMOD / DHS data',YAXISNAME = 'Modelled HAM',FONTSIZEPLUS = 0){
+getCorrelationPlot = function(MAX,INDEX,EMPIRICAL,MODELLED,XAXISNAME = 'Empirical POLYMOD / DHS data',YAXISNAME = 'Modelled HAM',FONTSIZEPLUS = 0,LEGEND = TRUE){
   # grid.newpage()
   pushViewport(plotViewport(c(1.5,1.5,1,.8),xscale=c(-0.01,(MAX+0.1)),yscale=c(-0.01,(MAX+0.1))))
   grid.rect()
@@ -692,13 +692,17 @@ getCorrelationPlot = function(MAX,INDEX,EMPIRICAL,MODELLED,XAXISNAME = 'Empirica
   grid.points(x=c(as.vector(EMPIRICAL)),y=c(as.vector(MODELLED)),size = unit(.5, "char"), pch=20,default.units = "native",gp=gpar(col=scaleagecolour,fill=scaleagecolour,alpha = .8))
   grid.lines(x=unit(c(0,MAX+.09),units = 'native'),y=unit(c(0,MAX+.09),units = 'native'),gp=gpar(lwd=2,lty='dashed',col='black'))
   grid.text(paste0('r = ',round(cor(as.vector(EMPIRICAL),as.vector(MODELLED)),2)),unit(0.5,'npc'),unit(1,'npc')+unit(-0.8,'lines'),gp=gpar(fontsize=8+FONTSIZEPLUS))
-  grid.text(paste0('(',INDEX,')'),unit(1,'lines'),unit(1,'npc')+unit(-0.8,'lines'),gp=gpar(fontsize=6.5+FONTSIZEPLUS))
+  if(!is.na(INDEX)) grid.text(paste0('(',INDEX,')'),unit(1,'lines'),unit(1,'npc')+unit(-0.8,'lines'),gp=gpar(fontsize=6.5+FONTSIZEPLUS))
   
-  ypos = seq(0.05,0.7,length.out = 16)
-  allages = paste0(seq(0,75,5),'-',seq(4,79,5))
-  grid.points(x = unit(rep(1,ncol(MODELLED)),'npc')+unit(0.2,'lines'),y = unit(ypos[1:ncol(MODELLED)],'npc'),size = unit(.5, "char"), pch=20,
-              gp=gpar(col=scaleagecolour[1:ncol(MODELLED)],fill=scaleagecolour[1:ncol(MODELLED)],alpha = 1))
-  grid.text(allages[1:ncol(MODELLED)],x = unit(rep(1,ncol(MODELLED)),'npc')+unit(0.75,'lines'),y = unit(ypos[1:ncol(MODELLED)],'npc'),just = 'left',gp=gpar(fontsize = 5+FONTSIZEPLUS))
+  if(LEGEND)
+  {
+    ypos = seq(0.05,0.7,length.out = 16)
+    allages = paste0(seq(0,75,5),'-',seq(4,79,5))
+    grid.points(x = unit(rep(1,ncol(MODELLED)),'npc')+unit(0.2,'lines'),y = unit(ypos[1:ncol(MODELLED)],'npc'),size = unit(.5, "char"), pch=20,
+                gp=gpar(col=scaleagecolour[1:ncol(MODELLED)],fill=scaleagecolour[1:ncol(MODELLED)],alpha = 1))
+    grid.text(allages[1:ncol(MODELLED)],x = unit(rep(1,ncol(MODELLED)),'npc')+unit(0.75,'lines'),y = unit(ypos[1:ncol(MODELLED)],'npc'),just = 'left',gp=gpar(fontsize = 5+FONTSIZEPLUS))
+    
+  }
   
   grid.rect(gp=gpar(col='black',fill=NA)) 
   popViewport()

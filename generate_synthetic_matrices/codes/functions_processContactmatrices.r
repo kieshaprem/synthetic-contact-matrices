@@ -24,11 +24,11 @@ getRegionalMean = function(isocheck,DATA){
 }
 
 getPopratio = function(HAM,pop){
-  apply(HAM[1:16,1:16],2,function(x) x/pop[1:16])
+  t(t(HAM[1:16,1:16])/pop[1:16])
 }
 
 estimateHH = function(popratio,pop){
-  apply(popratio,2,function(x) x*pop[1:16])
+  t(t(popratio[1:16,1:16])*pop[1:16])
 }
 
 getHAMWORLD = function(COUNTRY){
@@ -56,13 +56,20 @@ getHAMWORLD_URBANRURAL = function(COUNTRY,HAMweights,POPRATIO_POLYMODDHS,popage)
 }
 
 inferred.hhcontact = function(HH,AGEMAX){
-  data.matrix(KAPPA_HOME$POLYMOD[1:AGEMAX,1:AGEMAX]*(HH[1:AGEMAX,1:AGEMAX]))
+  data.matrix(lambdas$POLYMOD$home[1:AGEMAX,1:AGEMAX]*(HH[1:AGEMAX,1:AGEMAX])+deltas$POLYMOD$home)
 }
 
 HHcontact_POLYMOD_DHS = function(COUNTRY,POLYMOD){
   HH = HAM_POLYMODandDHS[[COUNTRY]]
   if(POLYMOD==FALSE) contact_home = inferred.hhcontact(HH = HH,AGEMAX = 16)
-  if(POLYMOD==TRUE) contact_home = data.matrix(KAPPA_HOME[[COUNTRY]][1:16,1:16]*(HH[1:16,1:16]))
+  if(POLYMOD==TRUE) contact_home = data.matrix(KAPPA_HOME[[COUNTRY]][1:16,1:16]*(HH[1:16,1:16])+deltas[[COUNTRY]])
+  return(contact_home)
+}
+
+HHcontact_POLYMOD_DHS = function(COUNTRY,POLYMOD){
+  HH = HAM_POLYMODandDHS[[COUNTRY]]
+  if(POLYMOD==FALSE) contact_home = inferred.hhcontact(HH = HH,AGEMAX = 16)
+  if(POLYMOD==TRUE) contact_home = data.matrix(lambdas[[COUNTRY]]$home[1:16,1:16]*(HH[1:16,1:16])+deltas[[COUNTRY]]$home)
   return(contact_home)
 }
 
@@ -72,56 +79,29 @@ HHcontact_Rest_of_world = function(COUNTRY){
   return(contact_home)
 }
 
-getWorkPop = function(COUNTRY){
+getWorkPop = function(COUNTRY,POLYMOD,SURVEYPROP = polymod_pworkandsch){
   workingpop = as.numeric(work[work$iso3c %in% COUNTRY,6:21])
   workingpop[1:3] =0
   workingpop[15:16]=0.01
-  wa = (workingpop)%*%t(workingpop)
+  
+  POLYMODcountries = c("BEL", "DEU","FIN", "GBR" ,"ITA" ,"LUX" ,"NLD","POL")
+  polymodwork = colMeans(work[work$iso3c %in% POLYMODcountries,6:21],na.rm=TRUE)
+  workingratio = workingpop/(polymodwork)
+  
+  if(POLYMOD==TRUE) wa = SURVEYPROP[[COUNTRY]]$pwork 
+  if(POLYMOD==FALSE)  wa = SURVEYPROP$POLYMOD$pwork * (workingpop)
+  
   return(wa)
 }
 
-getSchoolPop = function(COUNTRY){
+getSchoolPop = function(COUNTRY,POLYMOD,SURVEYPROP = polymod_pworkandsch){
   schoolpop = as.numeric(school[school$iso %in% COUNTRY,grep(pattern = 'age',x = colnames(school))])
-  sa = (schoolpop)#%*%t(schoolpop)+0.01
-  sa = sa
+  
+  POLYMODcountries = c("BEL", "DEU","FIN", "GBR" ,"ITA" ,"LUX" ,"NLD","POL")
+  polymodsch = colMeans(school[school$iso %in% POLYMODcountries,grep(pattern = 'age',x = colnames(school))],na.rm=TRUE)
+  
+  if(POLYMOD==TRUE) sa =  c(SURVEYPROP$POLYMOD$psch/schoolpop[1:4],schoolpop[5:16]) 
+  if(POLYMOD==FALSE)  sa =  c(SURVEYPROP$POLYMOD$psch/polymodsch[1:4],polymodsch[5:16])*schoolpop
+  sa[is.na(sa)] = 0
   return(sa)
 }
-# getSchoolPop = function(COUNTRY){
-#   schoolpop = as.numeric(school[school$Country.Code %in% COUNTRY,grep(pattern = 'age',x = colnames(school))])
-#   sa = (schoolpop)%*%t(schoolpop) #+0.01
-#   sa = sa
-#   return(sa)
-# }
-
-# deprecated functions
-# HHcontact_POLYMOD_DHS = function(COUNTRY,POLYMOD){
-#   HH_temp = HHAGE[[paste0('hhage.',tolower(COUNTRY))]]
-#   if(POLYMOD==FALSE) kappa.home = inferred.hhcontact(HH=HH_temp,z=16)
-#   if(POLYMOD==TRUE) kappa.home = data.matrix(KAPPA.HOME[[paste0('lh.',tolower(COUNTRY))]][1:16,1:16]*(HH_temp[1:16,1:16]))
-#   return(kappa.home)
-# }
-# 
-# HHcontact_Rest_of_world = function(COUNTRY){
-#   HH_temp = HAMworld[[(COUNTRY)]]
-#   kappa.home = inferred.hhcontact(HH=HH_temp,z=16)
-#   return(kappa.home)
-# }
-# 
-# getWORKPYRAMID = function(COUNTRY){
-#   temp = as.numeric(work[work$country==COUNTRY,8:20])
-#   temp[3:13][is.na(temp[3:13])] = work$Total[work$final_country==COUNTRY]
-#   temp[is.na(temp)] =0
-#   pyramid = (temp)%*%t(temp)
-#   pyramid = rbind(pyramid,0.0001,0.0001,0.0001)
-#   pyramid = cbind(pyramid,0.0001,0.0001,0.0001)
-#   return(pyramid)
-# }
-# 
-# getSCHOOLPYRAMID = function(COUNTRY){
-#   temp = as.numeric(school[school$final_country==COUNTRY,5:20])
-#   pyramid = (temp)%*%t(temp) +0.01
-#   return(pyramid)
-# }
-
-
-
