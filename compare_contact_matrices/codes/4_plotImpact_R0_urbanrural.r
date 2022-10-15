@@ -11,7 +11,7 @@ calc_R0 = function(contact_matrix, beta, susceptibility, infectiousness, duratio
   abs(eigen(ngm)$values[1])
 }
 
-countries = names(contacts2020_rural)
+countries = names(contacts2021_rural)
 
 r0_urbanrural = data.frame(iso = countries, 
                            contacts_0to9_urban = NA, contacts_0to9_rural = NA, 
@@ -22,27 +22,27 @@ for(i in 1:nrow(r0_urbanrural))
 {
   co = r0_urbanrural$iso[i]
   
-  r0_urbanrural$contacts_0to9_urban[i] = mean(rowSums(contacts2020_urban[[co]]$all)[1:2])
-  r0_urbanrural$contacts_60to69_urban[i] = mean(rowSums(contacts2020_urban[[co]]$all)[13:14])
-  r0_urbanrural$contacts_0to9_rural[i] = mean(rowSums(contacts2020_rural[[co]]$all)[1:2])
-  r0_urbanrural$contacts_60to69_rural[i] = mean(rowSums(contacts2020_rural[[co]]$all)[13:14])
+  r0_urbanrural$contacts_0to9_urban[i] = mean(rowSums(contacts2021_urban[[co]]$all)[1:2])
+  r0_urbanrural$contacts_60to69_urban[i] = mean(rowSums(contacts2021_urban[[co]]$all)[13:14])
+  r0_urbanrural$contacts_0to9_rural[i] = mean(rowSums(contacts2021_rural[[co]]$all)[1:2])
+  r0_urbanrural$contacts_60to69_rural[i] = mean(rowSums(contacts2021_rural[[co]]$all)[13:14])
   
-  r0_urbanrural$r0_urban[i] = calc_R0(contact_matrix = contacts2020_urban[[co]]$all, 
+  r0_urbanrural$r0_urban[i] = calc_R0(contact_matrix = contacts2021_urban[[co]]$all, 
                                       beta = 0.04,
                                       susceptibility =  rep(1,16),
                                       infectiousness =  rep(1,16), 
                                       duration_of_infectiousness = 5) 
-  r0_urbanrural$r0_urban_age[i] = calc_R0(contact_matrix = contacts2020_urban[[co]]$all, 
+  r0_urbanrural$r0_urban_age[i] = calc_R0(contact_matrix = contacts2021_urban[[co]]$all, 
                                           beta = 0.04,
                                           susceptibility =  c(rep(0.5,4),rep(1,12)),
                                           infectiousness =  c(rep(0.5,4),rep(1,12)),
                                           duration_of_infectiousness = 5) 
-  r0_urbanrural$r0_rural[i] = calc_R0(contact_matrix = contacts2020_rural[[co]]$all, 
+  r0_urbanrural$r0_rural[i] = calc_R0(contact_matrix = contacts2021_rural[[co]]$all, 
                                       beta = 0.04,
                                       susceptibility =  rep(1,16),
                                       infectiousness =  rep(1,16), 
                                       duration_of_infectiousness = 5) 
-  r0_urbanrural$r0_rural_age[i] = calc_R0(contact_matrix = contacts2020_rural[[co]]$all, 
+  r0_urbanrural$r0_rural_age[i] = calc_R0(contact_matrix = contacts2021_rural[[co]]$all, 
                                           beta = 0.04,
                                           susceptibility =  c(rep(0.5,4),rep(1,12)),
                                           infectiousness =  c(rep(0.5,4),rep(1,12)),
@@ -61,7 +61,7 @@ r0_urbanrural$incomegroup_index = 1*(r0_urbanrural$incomegroup %in% "Low income"
 r0_urbanrural$subregion = work$subregion[match(r0_urbanrural$iso,work$iso3c)]
 rm(work,workpopage)
 
-if(SAVEPLOT) png(paste0('plots/impact_r0_urbanrural.png'),height=17,width=17,units='cm',res=700,pointsize=10)
+png(paste0('plots/r0contacts_urbanrural.png'),height=17,width=17,units='cm',res=700,pointsize=10)
 if(1)
 {
   grid.newpage()
@@ -94,7 +94,7 @@ if(1)
                              INDEX = 'C',
                              XAXISNAME = expression(paste('Rural ',R[0])),
                              YAXISNAME = expression(paste('Urban ',R[0])),
-                             SCALE = 1,YMAX = 4.5,YMIN = 1,
+                             SCALE = 1,YMAX = 6,YMIN = 1,
                              TITLE = 'No age-dependent\nsusceptibilty and infectiousness',
                              GROUP = r0_urbanrural$incomegroup_index)
   popViewport()
@@ -104,7 +104,7 @@ if(1)
                              INDEX = 'D', 
                              XAXISNAME = expression(paste('Rural ',R[0])),
                              YAXISNAME = expression(paste('Urban ',R[0])),
-                             SCALE = 1,YMAX = 4.5,YMIN = 1,
+                             SCALE = 1,YMAX = 5,YMIN = 1,
                              TITLE = 'Age-dependent\nsusceptibilty and infectiousness',
                              GROUP = r0_urbanrural$incomegroup_index)
   popViewport()
@@ -114,7 +114,7 @@ if(1)
   popViewport()
   
 }
-if(SAVEPLOT) dev.off()
+dev.off()
 
 
 g = 4
@@ -124,5 +124,6 @@ cor.test(r0_urbanrural$r0_rural_age[r0_urbanrural$incomegroup_index %in% g],
          r0_urbanrural$r0_urban_age[r0_urbanrural$incomegroup_index %in% g])
 cor.test(r0_urbanrural$r0_rural[r0_urbanrural$incomegroup_index %in% g],
          r0_urbanrural$r0_urban[r0_urbanrural$incomegroup_index %in% g])
+
 
 

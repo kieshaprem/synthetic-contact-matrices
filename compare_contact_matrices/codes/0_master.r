@@ -34,6 +34,7 @@ source('codes/1_loadSyntheticContacts.r')
 # ## Compare the 2017 matrices to the empirical matrices 
 # COMPARE_2017_ANALYSIS = FALSE 
 # source('codes/2_normalise.r')
+source('codes/2_normalise_urbanrural.r')
 ########################################################################
 
 # Section 3: Compare the matrices

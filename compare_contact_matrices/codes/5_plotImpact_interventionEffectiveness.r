@@ -1,7 +1,7 @@
 # load modelling output for the physical distancing interventions for COVID-19 pandemic using both the empirical and synthetic contact matrices 
 # (codes are hosted in a different repository)
 
-load('output/data_effectiveness.rdata')
+load('output/data_effectiveness_202201.rdata')
 
 library(ggsci)
 COLS = pal_npg(c("nrc"))(10)
@@ -19,17 +19,19 @@ reduction$shielding = list()
 
 for(co in 1:length(reduction$iso))
 {
-  INDEX1 = which(data_effectiveness$scen %in% 'social distancing20'& data_effectiveness$country %in% reduction$name[co] & data_effectiveness$variable %in% 'effectiveness' & data_effectiveness$compartment %in% 'cases')
-  reduction$distance20[[reduction$iso[co]]] = data.frame(data_effectiveness[INDEX1,c('contact_matrix','low95','low50','median','high50','high95')])
-  INDEX2 = which(data_effectiveness$scen %in% 'social distancing50'& data_effectiveness$country %in% reduction$name[co] & data_effectiveness$variable %in% 'effectiveness' & data_effectiveness$compartment %in% 'cases')
-  reduction$distance50[[reduction$iso[co]]] = data.frame(data_effectiveness[INDEX2,c('contact_matrix','low95','low50','median','high50','high95')])
-  INDEX3 = which(data_effectiveness$scen %in% 'shielding'& data_effectiveness$country %in% reduction$name[co] & data_effectiveness$variable %in% 'effectiveness' & data_effectiveness$compartment %in% 'cases')
-  reduction$shielding[[reduction$iso[co]]] = data.frame(data_effectiveness[INDEX3,c('contact_matrix','low95','low50','median','high50','high95')])
+  INDEX1 = which(cases_reduction$scen %in% 'social distancing20'& cases_reduction$country %in% reduction$name[co] & cases_reduction$variable %in% 'reduction' & cases_reduction$compartment %in% 'cases')
+  reduction$distance20[[reduction$iso[co]]] = data.frame(cases_reduction[INDEX1,c('contact_matrix','low95','low50','median','high50','high95')])
+  INDEX2 = which(cases_reduction$scen %in% 'social distancing50'& cases_reduction$country %in% reduction$name[co] & cases_reduction$variable %in% 'reduction' & cases_reduction$compartment %in% 'cases')
+  reduction$distance50[[reduction$iso[co]]] = data.frame(cases_reduction[INDEX2,c('contact_matrix','low95','low50','median','high50','high95')])
+  INDEX3 = which(cases_reduction$scen %in% 'lockdown'& cases_reduction$country %in% reduction$name[co] & cases_reduction$variable %in% 'reduction' & cases_reduction$compartment %in% 'cases')
+  reduction$lockdown[[reduction$iso[co]]] = data.frame(cases_reduction[INDEX3,c('contact_matrix','low95','low50','median','high50','high95')])
   rm(INDEX1,INDEX2,INDEX3)
 }
 
 
-if(SAVEPLOT) png('plots/impcat_relative_reduction_cases.png',height=17,width=15,units='cm',res=1000,pointsize=10)
+library(grid)
+SAVEPLOT = TRUE
+if(SAVEPLOT) png('plots/case_reduction_absolute.png',height=17,width=15,units='cm',res=300,pointsize=10)
 if(1)
 {
   grid.newpage()
@@ -37,43 +39,43 @@ if(1)
   pushViewport(viewport(layout=grid.layout(nrow=5,ncol=2,width=c(rep(1,2)),height=c(rep(1,5)))))
   
   pushViewport(viewport(layout.pos.col=1,layout.pos.row=1))
-  plotReduction(ISO = countries$iso[1],INDEX = letters[1])
+  plotReductionAbsolute(ISO = countries$iso[1],INDEX = letters[1],YRANGE = c(0,800000000),YAXIS = seq(0,800000000,200000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=1,layout.pos.row=2))
-  plotReduction(ISO = countries$iso[2],INDEX = letters[2])
+  plotReductionAbsolute(ISO = countries$iso[2],INDEX = letters[2],YRANGE = c(0,40000000),YAXIS = seq(0,40000000,10000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=1,layout.pos.row=3))
-  plotReduction(ISO = countries$iso[3],INDEX = letters[3])
+  plotReductionAbsolute(ISO = countries$iso[3],INDEX = letters[3],YRANGE = c(0,4500000),YAXIS = seq(0,4000000,1000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=1,layout.pos.row=4))
-  plotReduction(ISO = countries$iso[4],INDEX = letters[4])
+  plotReductionAbsolute(ISO = countries$iso[4],INDEX = letters[4],YRANGE = c(0,22000000),YAXIS = seq(0,20000000,5000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=1,layout.pos.row=5))
-  plotReduction(ISO = countries$iso[5],INDEX = letters[5])
+  plotReductionAbsolute(ISO = countries$iso[5],INDEX = letters[5],YRANGE = c(0,15000000),YAXIS = seq(0,15000000,5000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=2,layout.pos.row=1))
-  plotReduction(ISO = countries$iso[6],INDEX = letters[6])
+  plotReductionAbsolute(ISO = countries$iso[6],INDEX = letters[6],YRANGE = c(0,80000000),YAXIS = seq(0,80000000,20000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=2,layout.pos.row=2))
-  plotReduction(ISO = countries$iso[7],INDEX = letters[7])
+  plotReductionAbsolute(ISO = countries$iso[7],INDEX = letters[7],YRANGE = c(0,25000000),YAXIS = seq(0,25000000,5000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=2,layout.pos.row=3))
-  plotReduction(ISO = countries$iso[8],INDEX = letters[8])
+  plotReductionAbsolute(ISO = countries$iso[8],INDEX = letters[8],YRANGE = c(0,16000000),YAXIS = seq(0,15000000,5000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=2,layout.pos.row=4))
-  plotReduction(ISO = countries$iso[9],INDEX = letters[9])
+  plotReductionAbsolute(ISO = countries$iso[9],INDEX = letters[9],YRANGE = c(0,50000000),YAXIS = seq(0,50000000,10000000))
   popViewport()
   
   pushViewport(viewport(layout.pos.col=2,layout.pos.row=5))
-  plotReduction(ISO = countries$iso[10],INDEX = letters[10])
+  plotReductionAbsolute(ISO = countries$iso[10],INDEX = letters[10],YRANGE = c(0,6000000),YAXIS = seq(0,6000000,2000000))
   popViewport()
   
   popViewport()

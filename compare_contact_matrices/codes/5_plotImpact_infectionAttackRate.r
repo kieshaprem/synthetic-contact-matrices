@@ -47,7 +47,7 @@ for(co in 1:length(rate$iso))
   rm(INDEX1)
 }
 
-if(SAVEPLOT) png('plots/impact_infection_attack_rate.png',height=17,width=20,units='cm',res=1000,pointsize=10)
+if(SAVEPLOT) png('plots/infectionattackrate.png',height=17,width=20,units='cm',res=1000,pointsize=10)
 if(1)
 {
   grid.newpage()
@@ -95,8 +95,8 @@ if(1)
   popViewport()
   
   popViewport()
-  matr_names = c("Empirical\n(study year)","Empirical\n(adjusted)","Synthetic 2017","Synthetic 2020", "Synthetic 2020\n(rural)",   
-                 "Synthetic 2020\n(urban)")
+  matr_names = c("Empirical\n(study year)","Empirical\n(adjusted)","Synthetic 2017","Synthetic 2021", "Synthetic 2021\n(rural)",   
+                 "Synthetic 2021\n(urban)")
   start = seq(0.025,0.975,length.out = length(matr_names)+1)
   xpos = c(0,0.01)
   ypos = seq(0.0,0.04,length.out = 5)

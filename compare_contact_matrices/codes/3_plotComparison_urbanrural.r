@@ -1,9 +1,5 @@
-# ## Compare the relevant urban/rural matrices to the empirical matrices 
-URBANRURAL_ANALYSIS = TRUE
-# ## Compare the 2017 matrices to the empirical matrices 
-COMPARE_2017_ANALYSIS = FALSE
-source('codes/2_normalise.r')
-
+# source('codes/functions_plot.r')
+SAVEPLOT = TRUE
 
 isolist = names(empirical)
 rowlist = rep(1:5,2)
@@ -23,12 +19,13 @@ nage = as.numeric(lapply(empirical, function(x) nrow(x$all)))
 correlations = array(NA,length(empirical))
 for(i in 1:length(correlations))
 {
-  correlations[i] = cor(as.vector(empirical[[i]]$all),as.vector(synthetic2020[[i]]$all))
+  correlations[i] = cor(as.vector(empirical[[i]]$all),as.vector(synthetic2021[[i]]$all))
 }
 summary(correlations)
 
-
-if(SAVEPLOT) png('plots/compare_empirical_synthetic_urbanrural.png',height=30,width=30/5*3*2,units='cm',res=1000,pointsize=10)
+library(grid)
+# if(SAVEPLOT) png('plots/contacts_compare1.png',height=30,width=30,units='cm',res=1000,pointsize=10)
+if(SAVEPLOT) png('plots/contacts_compare_2021_urbanrural.png',height=30,width=30/5*3*2,units='cm',res=1000,pointsize=10)
 if(1)
 {
   grid.newpage()
@@ -49,7 +46,7 @@ if(1)
       popViewport()
       
       pushViewport(viewport(layout.pos.col=2,layout.pos.row=rowlist[ro]))
-      grid.text('Synthetic 2020',y=unit(1,'npc')+unit(0.75,'lines'),rot=0,gp=gpar(fontsize=10,fontface='bold'))
+      grid.text('Synthetic 2021',y=unit(1,'npc')+unit(0.75,'lines'),rot=0,gp=gpar(fontsize=10,fontface='bold'))
       grid.text('normalised',y=unit(1,'npc')+unit(0.0,'lines'),rot=0,gp=gpar(fontsize=10,fontface='italic'))
       popViewport()
     }
@@ -64,12 +61,13 @@ if(1)
     popViewport()
     
     pushViewport(viewport(layout.pos.col=2,layout.pos.row=rowlist[ro]))
-    cols <- colour_blue(synthetic2020[[iso]]$all,max.value = 1.0)
+    cols <- colour_blue(synthetic2021[[iso]]$all,max.value = 1.0)
     plotContact(cols=cols,LOCATION = '',INDEX = '',YLAB = FALSE,XLAB = ifelse(rowlist[ro] == 5,TRUE,FALSE),a = agegplist[ro],AGELABEL = agelabellist[[ro]],nage = nage[ro])
     popViewport()
     
     pushViewport(viewport(layout.pos.col=3,layout.pos.row=rowlist[ro]))
-    plotCorrelation(ISO = iso,EMPIRICAL = empirical[[iso]]$all, MODELLED = synthetic2020[[iso]]$all,SCALE = 0.5)
+    # plotStep(c1 = rowSums(synthetic2021[[iso]]$all),c2 = rowSums(empirical[[iso]]$all),a=agegplist[ro],AGELABEL = agelabellist[ro],LOCATION = '',INDEX ='',LEGEND = TRUE)
+    plotCorrelation(ISO = iso,EMPIRICAL = empirical[[iso]]$all, MODELLED = synthetic2021[[iso]]$all,SCALE = 0.5)
     popViewport()
     
     
@@ -111,7 +109,7 @@ if(1)
       popViewport()
       
       pushViewport(viewport(layout.pos.col=2,layout.pos.row=rowlist[ro]))
-      grid.text('Synthetic 2020',y=unit(1,'npc')+unit(0.75,'lines'),rot=0,gp=gpar(fontsize=10,fontface='bold'))
+      grid.text('Synthetic 2021',y=unit(1,'npc')+unit(0.75,'lines'),rot=0,gp=gpar(fontsize=10,fontface='bold'))
       grid.text('normalised',y=unit(1,'npc')+unit(0.0,'lines'),rot=0,gp=gpar(fontsize=10,fontface='italic'))
       popViewport()
     }
@@ -124,15 +122,34 @@ if(1)
     popViewport()
     
     pushViewport(viewport(layout.pos.col=2,layout.pos.row=rowlist[ro]))
-    cols <- colour_blue(synthetic2020[[iso]]$all,max.value = 1.0)
+    cols <- colour_blue(synthetic2021[[iso]]$all,max.value = 1.0)
     plotContact(cols=cols,LOCATION = '',INDEX = '',YLAB = FALSE,XLAB = ifelse(rowlist[ro] == 5,TRUE,FALSE),a = agegplist[ro],AGELABEL = agelabellist[[ro]],nage = nage[ro])
     popViewport()
     
     pushViewport(viewport(layout.pos.col=3,layout.pos.row=rowlist[ro]))
-    plotCorrelation(ISO = iso,EMPIRICAL = empirical[[iso]]$all, MODELLED = synthetic2020[[iso]]$all,SCALE = 0.5)
+    # plotStep(c1 = rowSums(synthetic2021[[iso]]$all),c2 = rowSums(empirical[[iso]]$all),a=agegplist[ro],AGELABEL = agelabellist[ro],LOCATION = '',INDEX ='',LEGEND = TRUE)
+    plotCorrelation(ISO = iso,EMPIRICAL = empirical[[iso]]$all, MODELLED = synthetic2021[[iso]]$all,SCALE = 0.5)
     popViewport()
     
-  
+    
+    # if(rowlist[ro] == 5) 
+    # {
+    #   pushViewport(viewport(layout.pos.col=1,layout.pos.row=5))
+    #   numberlegend = seq(0,1,0.01)
+    #   colourlegend = colour_blue(numberlegend,1) 
+    #   xposlegend = (seq(0.15,0.85,length.out = length(numberlegend)+1))
+    #   yposlegend = c(0.15,0.2)
+    #   for(i in 1:length(numberlegend)) grid.polygon(x=unit(c(xposlegend[i],xposlegend[i+1],xposlegend[i+1],xposlegend[i]),'npc'),
+    #                                                 y=unit(c(yposlegend[1],yposlegend[1],yposlegend[2],yposlegend[2]),'npc')-unit(4.80,'lines'),
+    #                                                 gp = gpar(fill=colourlegend[i],col=colourlegend[i]))
+    #   grid.polygon(y=unit(c(yposlegend[1],yposlegend[1],yposlegend[2],yposlegend[2]),'npc')-unit(4.80,'lines'),
+    #                x=unit(c(max(xposlegend),min(xposlegend),min(xposlegend),max(xposlegend)),'npc'),
+    #                gp = gpar(fill=NA,col='black'))
+    #   grid.text('Nomalised mean number of contacts',x=unit(0.5,'npc'),y=unit(-5,'lines'),default.units = 'npc',rot = 0,gp=gpar(fontsize=8,fontface='bold'))
+    #   grid.text(seq(0,1,0.25),x=unit(xposlegend[match(seq(0,1,0.25),numberlegend)],'npc'),y=unit(-4.0,'lines'), gp=gpar(fontsize=8,fontface='plain'))
+    #   popViewport()
+    # }
+    
   }
   popViewport()
   popViewport()
@@ -141,6 +158,8 @@ if(1)
   
 }
 if(SAVEPLOT) dev.off()
+
+  
 
 
 

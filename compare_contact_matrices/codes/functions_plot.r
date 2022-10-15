@@ -258,6 +258,61 @@ plotReduction = function(ISO,INDEX='',DATA = reduction,YAXISNAME = '% reduction 
   grid.polygon(c(0.5,6.5,6.5,0.5),y=c(YRANGE[1],YRANGE[1],YRANGE[2],YRANGE[2]),default.units = 'native',gp=gpar(col = NA,fill='grey90'))
   grid.polygon(c(12.5,18.5,18.5,12.5),y=c(YRANGE[1],YRANGE[1],YRANGE[2],YRANGE[2]),default.units = 'native',gp=gpar(col = NA,fill='grey90'))
   grid.rect(gp=gpar(lwd = 1.5,fill=NA))
+  grid.text(label = c('20% physical','50% physical','Shielding'),x= unit(c(3.5,9.5,15.5),'native'), y = unit(c(-0.65,-0.65,-0.65),'lines'),gp=gpar(fontsize=8))
+  grid.text(label = c('distancing','distancing',''),x= unit(c(3.5,9.5,15.5),'native'), y = unit(c(-1.45,-1.45,-1.45),'lines'),gp=gpar(fontsize=8))
+  grid.yaxis(at = seq(0,1,0.2),label = seq(0,100,20),gp=gpar(fontsize=7))
+  
+  # grid.text(XAXISNAME,y=unit(-2.1,'lines'),gp=gpar(fontsize=7,fontface = 'bold'))
+  grid.text(YAXISNAME,x=unit(-2.7,'lines'),rot=90,gp=gpar(fontsize= 8,fontface='plain'))
+  grid.text(DATA$fullname[DATA$iso %in% ISO],x=unit(-3.7,'lines'),rot=90,gp=gpar(fontsize=8,fontface='bold'))
+  
+  matr = c("contact_matrix_empirical","contact_matrix_empirical_adjusted","contact_matrix_synthetic_old","contact_matrix_synthetic_new_national", 
+           "contact_matrix_synthetic_new_rural","contact_matrix_synthetic_new_urban")
+  for(m in 1:length(matr))
+  {
+    m_col = which(DATA$distance20[[ISO]]$contact_matrix %in% matr[m])
+    if(length(m_col)>0)
+    {
+      grid.lines(x = c(m,m), y =c(DATA$distance20[[ISO]]$low95[m_col],DATA$distance20[[ISO]]$high95[m_col]),default.units = 'native',
+                 gp = gpar(col = COLS[m],lwd=1))
+      grid.lines(x = c(m+6,m+6), y =c(DATA$distance50[[ISO]]$low95[m_col],DATA$distance50[[ISO]]$high95[m_col]),default.units = 'native',
+                 gp = gpar(col = COLS[m],lwd=1))
+      grid.lines(x = c(m+12,m+12), y =c(DATA$shielding[[ISO]]$low95[m_col],DATA$shielding[[ISO]]$high95[m_col]),default.units = 'native',
+                 gp = gpar(col = COLS[m],lwd=1))
+      extra = 0.15
+      grid.polygon(x = c(m-extra,m+extra,m+extra,m-extra),
+                   y =c(DATA$distance20[[ISO]]$low50[m_col],DATA$distance20[[ISO]]$low50[m_col],DATA$distance20[[ISO]]$high50[m_col],DATA$distance20[[ISO]]$high50[m_col]),
+                   default.units = 'native',gp = gpar(col = NA, fill = COLS[m]))
+      grid.lines(x = c(m+extra,m-extra), y =c(DATA$distance20[[ISO]]$median[m_col],DATA$distance20[[ISO]]$median[m_col]),default.units = 'native',
+                 gp = gpar(col = 'grey90',lwd=1))
+      grid.polygon(x = c(m-extra,m+extra,m+extra,m-extra)+6,
+                   y =c(DATA$distance50[[ISO]]$low50[m_col],DATA$distance50[[ISO]]$low50[m_col],DATA$distance50[[ISO]]$high50[m_col],DATA$distance50[[ISO]]$high50[m_col]),
+                   default.units = 'native',gp = gpar(col = NA, fill = COLS[m]))
+      grid.lines(x = c(m+extra,m-extra)+6, y =c(DATA$distance50[[ISO]]$median[m_col],DATA$distance50[[ISO]]$median[m_col]),default.units = 'native',
+                 gp = gpar(col = 'white',lwd=1))
+      grid.polygon(x = c(m-extra,m+extra,m+extra,m-extra)+12,
+                   y =c(DATA$shielding[[ISO]]$low50[m_col],DATA$shielding[[ISO]]$low50[m_col],DATA$shielding[[ISO]]$high50[m_col],DATA$shielding[[ISO]]$high50[m_col]),
+                   default.units = 'native',gp = gpar(col = NA, fill = COLS[m]))
+      grid.lines(x = c(m+extra,m-extra)+12, y =c(DATA$shielding[[ISO]]$median[m_col],DATA$shielding[[ISO]]$median[m_col]),default.units = 'native',
+                 gp = gpar(col = 'grey90',lwd=1))
+    }
+    
+    
+  }
+  
+  grid.rect(gp=gpar(col='black',fill=NA)) 
+  popViewport()
+}
+
+plotReduction = function(ISO,INDEX='',DATA = reduction,YAXISNAME = '% change attack rate')
+{
+  # grid.newpage()
+  YRANGE = c(0,1.0)
+  XRANGE = c(0.5,18.5)
+  pushViewport(plotViewport(c(1.5,3.5,0.75,0.75),xscale=XRANGE,yscale=YRANGE))
+  grid.polygon(c(0.5,6.5,6.5,0.5),y=c(YRANGE[1],YRANGE[1],YRANGE[2],YRANGE[2]),default.units = 'native',gp=gpar(col = NA,fill='grey90'))
+  grid.polygon(c(12.5,18.5,18.5,12.5),y=c(YRANGE[1],YRANGE[1],YRANGE[2],YRANGE[2]),default.units = 'native',gp=gpar(col = NA,fill='grey90'))
+  grid.rect(gp=gpar(lwd = 1.5,fill=NA))
   grid.text(label = c('20% physical','50% physical','Lockdown'),x= unit(c(3.5,9.5,15.5),'native'), y = unit(c(-0.65,-0.65,-0.65),'lines'),gp=gpar(fontsize=8))
   grid.text(label = c('distancing','distancing',''),x= unit(c(3.5,9.5,15.5),'native'), y = unit(c(-1.45,-1.45,-1.45),'lines'),gp=gpar(fontsize=8))
   grid.yaxis(at = seq(0,1,0.2),label = seq(0,100,20),gp=gpar(fontsize=7))
@@ -320,7 +375,7 @@ plotReductionAbsolute = function(ISO,INDEX='',DATA = reduction,YRANGE, YAXIS, YA
   grid.yaxis(at = YAXIS,label = YAXIS/(10^6),gp=gpar(fontsize=7))
   
   # grid.text(XAXISNAME,y=unit(-2.1,'lines'),gp=gpar(fontsize=7,fontface = 'bold'))
-  grid.text(YAXISNAME,x=unit(-2.7,'lines'),rot=90,gp=gpar(fontsize= 7.5,fontface='plain'))
+  grid.text(YAXISNAME,x=unit(-2.95,'lines'),rot=90,gp=gpar(fontsize= 7,fontface='plain'))
   grid.text(DATA$fullname[DATA$iso %in% ISO],x=unit(-3.7,'lines'),rot=90,gp=gpar(fontsize=8,fontface='bold'))
   
   matr = c("contact_matrix_empirical","contact_matrix_empirical_adjusted","contact_matrix_synthetic_old","contact_matrix_synthetic_new_national", 
@@ -398,63 +453,6 @@ plotAttackRate = function(ISO,INDEX='',DATA = rate,YAXISNAME = 'Infection attack
       }
       
     }
-  }
-  
-  grid.rect(gp=gpar(col='black',fill=NA)) 
-  popViewport()
-}
-
-plotReductionAbsolute = function(ISO,INDEX='',DATA = reduction,YRANGE, YAXIS, YAXISNAME = 'Reduction in cases (mil)')
-{
-  # grid.newpage()
-  # YRANGE = c(0,800000000)
-  # YAXIS = seq(0,800000000,200000000)
-  XRANGE = c(0.5,18.5)
-  pushViewport(plotViewport(c(1.5,3.5,0.75,0.75),xscale=XRANGE,yscale=YRANGE))
-  grid.polygon(c(0.5,6.5,6.5,0.5),y=c(YRANGE[1],YRANGE[1],YRANGE[2],YRANGE[2]),default.units = 'native',gp=gpar(col = NA,fill='grey90'))
-  grid.polygon(c(12.5,18.5,18.5,12.5),y=c(YRANGE[1],YRANGE[1],YRANGE[2],YRANGE[2]),default.units = 'native',gp=gpar(col = NA,fill='grey90'))
-  grid.rect(gp=gpar(lwd = 1.5,fill=NA))
-  grid.text(label = c('20% physical','50% physical','Lockdown'),x= unit(c(3.5,9.5,15.5),'native'), y = unit(c(-0.65,-0.65,-0.65),'lines'),gp=gpar(fontsize=8))
-  grid.text(label = c('distancing','distancing',''),x= unit(c(3.5,9.5,15.5),'native'), y = unit(c(-1.45,-1.45,-1.45),'lines'),gp=gpar(fontsize=8))
-  # grid.yaxis(at = seq(0,1,0.2),label = seq(0,100,20),gp=gpar(fontsize=7))
-  grid.yaxis(at = YAXIS,label = YAXIS/(10^6),gp=gpar(fontsize=7))
-  
-  # grid.text(XAXISNAME,y=unit(-2.1,'lines'),gp=gpar(fontsize=7,fontface = 'bold'))
-  grid.text(YAXISNAME,x=unit(-2.95,'lines'),rot=90,gp=gpar(fontsize= 7.0,fontface='plain'))
-  grid.text(DATA$fullname[DATA$iso %in% ISO],x=unit(-3.7,'lines'),rot=90,gp=gpar(fontsize=8,fontface='bold'))
-  
-  matr = c("contact_matrix_empirical","contact_matrix_empirical_adjusted","contact_matrix_synthetic_old","contact_matrix_synthetic_new_national", 
-           "contact_matrix_synthetic_new_rural","contact_matrix_synthetic_new_urban")
-  for(m in 1:length(matr))
-  {
-    m_col = which(DATA$distance20[[ISO]]$contact_matrix %in% matr[m])
-    if(length(m_col)>0)
-    {
-      grid.lines(x = c(m,m), y =c(DATA$distance20[[ISO]]$low95[m_col],DATA$distance20[[ISO]]$high95[m_col]),default.units = 'native',
-                 gp = gpar(col = COLS[m],lwd=1))
-      grid.lines(x = c(m+6,m+6), y =c(DATA$distance50[[ISO]]$low95[m_col],DATA$distance50[[ISO]]$high95[m_col]),default.units = 'native',
-                 gp = gpar(col = COLS[m],lwd=1))
-      grid.lines(x = c(m+12,m+12), y =c(DATA$lockdown[[ISO]]$low95[m_col],DATA$lockdown[[ISO]]$high95[m_col]),default.units = 'native',
-                 gp = gpar(col = COLS[m],lwd=1))
-      extra = 0.15
-      grid.polygon(x = c(m-extra,m+extra,m+extra,m-extra),
-                   y =c(DATA$distance20[[ISO]]$low50[m_col],DATA$distance20[[ISO]]$low50[m_col],DATA$distance20[[ISO]]$high50[m_col],DATA$distance20[[ISO]]$high50[m_col]),
-                   default.units = 'native',gp = gpar(col = NA, fill = COLS[m]))
-      grid.lines(x = c(m+extra,m-extra), y =c(DATA$distance20[[ISO]]$median[m_col],DATA$distance20[[ISO]]$median[m_col]),default.units = 'native',
-                 gp = gpar(col = 'grey90',lwd=1))
-      grid.polygon(x = c(m-extra,m+extra,m+extra,m-extra)+6,
-                   y =c(DATA$distance50[[ISO]]$low50[m_col],DATA$distance50[[ISO]]$low50[m_col],DATA$distance50[[ISO]]$high50[m_col],DATA$distance50[[ISO]]$high50[m_col]),
-                   default.units = 'native',gp = gpar(col = NA, fill = COLS[m]))
-      grid.lines(x = c(m+extra,m-extra)+6, y =c(DATA$distance50[[ISO]]$median[m_col],DATA$distance50[[ISO]]$median[m_col]),default.units = 'native',
-                 gp = gpar(col = 'white',lwd=1))
-      grid.polygon(x = c(m-extra,m+extra,m+extra,m-extra)+12,
-                   y =c(DATA$lockdown[[ISO]]$low50[m_col],DATA$lockdown[[ISO]]$low50[m_col],DATA$lockdown[[ISO]]$high50[m_col],DATA$lockdown[[ISO]]$high50[m_col]),
-                   default.units = 'native',gp = gpar(col = NA, fill = COLS[m]))
-      grid.lines(x = c(m+extra,m-extra)+12, y =c(DATA$lockdown[[ISO]]$median[m_col],DATA$lockdown[[ISO]]$median[m_col]),default.units = 'native',
-                 gp = gpar(col = 'grey90',lwd=1))
-    }
-    
-    
   }
   
   grid.rect(gp=gpar(col='black',fill=NA)) 
