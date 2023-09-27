@@ -1,6 +1,6 @@
 # Projecting contact matrices in 177 geographical regions: an update and comparison with empirical data for the COVID-19 era"
 
-*Contributors: Kiesha Prem <sup>1,2</sup>, Kevin van Zandvoort <sup>1</sup>, Petra Klepac <sup>1</sup>, Rosalind M Eggo <sup>1</sup>, Nicholas G Davies <sup>1</sup>, Centre for the Mathematical Modelling of Infectious Diseases COVID-19 Working Group, Alex R Cook <sup>2</sup>, Mark Jit1 <sup>1</sup>*
+*Contributors: Kiesha Prem <sup>1,2</sup>, Kevin van Zandvoort <sup>1</sup>, Petra Klepac <sup>1</sup>, Rosalind M Eggo <sup>1</sup>, Nicholas G Davies <sup>1</sup>, Centre for the Mathematical Modelling of Infectious Diseases COVID-19 Working Group, Alex R Cook <sup>2</sup>, Mark Jit <sup>1</sup>*
 
   
   *Correspondence to: mark.jit@lshtm.ac.uk* 
